@@ -51,7 +51,7 @@
     <script src="../release/go.js"></script>
     <div id="allSampleContent" class="p-4 w-full">
 
-  <script src="icontest.js"></script>  <!-- load SVG definitions for many icons in the "icons" variable -->
+  <script src="icons.js"></script>  <!-- load SVG definitions for many icons in the "icons" variable -->
   <script id="code">
     function init() {
 
@@ -147,7 +147,7 @@
 
       // Convert the icons collection into an Array of JavaScript objects
       var nodeArray = [];
-      for (var k in iconstest) {
+      for (var k in icons) {
         nodeArray.push({ geo: k, color: colors["blue"] });
       }
       myDiagram2.model.nodeDataArray = nodeArray;
