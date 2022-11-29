@@ -81,7 +81,7 @@
         $(go.Shape, "Diamond",
           {
             fill: "deepskyblue", stroke: null, strokeWidth: 0,
-            desiredSize: new go.Size(28, 28)
+            desiredSize: new go.Size(48, 48)
           }),
         $(go.TextBlock,
           new go.Binding("text"))
@@ -93,7 +93,7 @@
         $(go.Shape, "Circle",
           {
             fill: "deepskyblue", stroke: null, strokeWidth: 0,
-            desiredSize: new go.Size(28, 28)
+            desiredSize: new go.Size(48, 48)
           }),
         $(go.TextBlock,
           new go.Binding("text"))
@@ -125,9 +125,9 @@
       { key: -3, isGroup: true },
 	  { key: -4, isGroup: true },
 	  
-	  { key: 51, text: "S", category: "Split", group: -4 },
+	  { key: 51, text: "Start", category: "Split", group: -4 },
 	  { key: 52, text: "52" ,group: -4 },
-      { key: 53, text: "J", category: "Merge", group: -4 },
+      { key: 53, text: "End", category: "Merge", group: -4 },
 	  
       { key: 1, text: "S", category: "Split", group: -1 },
       { key: 2, text: "C", group: -1 },
@@ -184,6 +184,7 @@
 	  { from: 27, to: 29 },
       { from: 51, to: 52 },
 	  { from: 52, to: 53 },
+	  { from: 101, to: 51 },
 	  
 	  
       { from: 101, to: 1 },
