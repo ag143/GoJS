@@ -1,5 +1,5 @@
 /*
- * Type definitions for GoJS v2.2.18
+ * Type definitions for GoJS v2.2.20
  * Project: https://gojs.net
  * Definitions by: Northwoods Software <https://github.com/NorthwoodsSoftware>
  * Definitions: https://github.com/NorthwoodsSoftware/GoJS
@@ -6641,6 +6641,7 @@ export class LinkingTool extends LinkingBaseTool {
      * This starts looking for a port at the #startObject if it is non-null,
      * otherwise it looks for an object at the Diagram#firstInput's InputEvent#documentPoint.
      * If it finds no object, or if the object it finds is not in a node, this method returns null.
+     * If it does find a port, it should set #isForwards to declare which direction the new link is being drawn.
      *
      * This method may be overridden, but we recommend that you call this base method.
      * Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.
@@ -23625,9 +23626,6 @@ export class Layout {
      * @return {Point}
      */
     protected initialOrigin(origin: Point): Point;
-    set id(value: number);
-    set mayUseWorkerFunction(value: ((lay: Layout) => boolean) | null);
-    set workerStateChanged(value: ((state: any, layout: Layout) => void) | null);
 }
 /**
  * This provides an abstract view of a diagram as a
