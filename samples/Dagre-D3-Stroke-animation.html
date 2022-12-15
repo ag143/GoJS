@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+
+
+  <title>CodePen - Dagre-D3 stroke animation + vue templating</title>
+  
+  
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.css'>
+  
+<style>
+#app {
+  padding: 20px 40px;
+}
+
+#svg-container {
+  background: #eaeaea;
+}
+
+text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-size: 14px;
+}
+
+.node rect {
+  stroke: #333;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+.edgePath path.path {
+  stroke: #333;
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+.hidden {
+  display: none;
+}
+
+.arrowhead {
+  stroke: blue;
+  fill: blue;
+  stroke-width: 1.5px !important;
+}
+
+marker > path {
+  stroke-width: 1.5px !important;
+}
+
+.inactive path {
+  stroke: #c1c1c1 !important;
+}
+
+.inactive marker path {
+  stroke: #c1c1c1;
+  fill: #c1c1c1;
+}
+
+.density-low path {
+  stroke: green !important;
+}
+
+.density-medium path {
+  stroke: orange !important;
+}
+
+.density-high path {
+  stroke: red !important;
+}
+
+.density-low marker path {
+  fill: green;
+}
+
+.density-medium marker path {
+  fill: orange;
+}
+
+.density-high marker path {
+  fill: red;
+}
+
+.weight-normal > path.path {
+  stroke-width: 1px;
+}
+
+.weight-medium > path.path {
+  stroke-width: 4px;
+}
+
+.weight-high > path.path {
+  stroke-width: 8px;
+}
+
+.animation-slow {
+  animation: arc-animation 100s linear infinite;
+}
+
+.animation-medium {
+  animation: arc-animation 50s linear infinite;
+}
+
+.animation-fast {
+  animation: arc-animation 10s linear infinite;
+}
+
+.animation {
+  stroke-dasharray: 5px 10px;
+  stroke-linecap: round;
+  stroke-dashoffset: 1500;
+}
+
+@keyframes arc-animation {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.arc-information {
+  width: 100px;
+  box-shadow: 0 0 1em #cecece;
+  background: white;
+  display: table !important;
+}
+.arc-information tr td {
+  padding: 3px 10px;
+}
+.arc-information tr th {
+  background: #FFEB3B;
+}
+.arc-information button {
+  width: 100%;
+  background: #FF9800;
+  color: #1f1f1f;
+  border: none;
+  border-radius: 3px;
+  margin: 5px 0;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div id="app">
+  <div>
+    <h3 class="ui header">svg path css animation, inspired by <a href="https://codepen.io/sarath-ar/pen/mPLGaw">this</a></h3>
+  </div>
+  <div id="svg-container">
+    <svg id="svg" width=960 height=600></svg>
+  </div>
+  <button class="ui blue button" onClick="showMo()">Show Mo!</button>
+  <button class="ui blue button" onClick="fadeOutD3()">Fadeout D3!</button>
+</div>
+
+
+<script type="text/x-template" id="node-template">
+	<b>{{label}}</b>
+</script>
+
+<script type="text/x-template" id="arc-template">
+	{{source}} - {{target}}
+</script>
+
+<script type="text/x-template" id="arc-template-detail">
+ 	<table class="arc-information">
+  	<thead>
+    	<tr>
+      	<th>{{svgId}}</th>
+  		</tr>
+  	</thead>
+    <tbody>
+    	<tr>
+      	<td>{{source}} - {{target}}</td>
+  		</tr>
+      <tr>
+      	<td>{{label}}</td>
+  		</tr>
+      <tr>
+      	<td><button v-on:click="showDetail()">details</button></td>
+  		</tr>
+  	</tbody>
+  </table>
+</script>
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+
+  <script src='https://d3js.org/d3.v3.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.21/vue.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.4.17/dagre-d3.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mo-js/0.265.9/mo.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js'></script>
+      <script id="rendered-js" >
+var obj = new Vue({
+  el: '#app' });
+
+var ArcComponent = Vue.extend({
+  template: '#arc-template-detail',
+  methods: {
+    showDetail: function () {
+      alert('Arc (' + this.source + '-' + this.target + ') detail');
+    } } });
+
+
+
+
+var nodeTemplate = Handlebars.compile($('#node-template').html());
+var arcTemplate = Handlebars.compile($('#arc-template-detail').html());
+
+var g = new dagreD3.graphlib.Graph().setGraph({});
+
+var nodes = [
+{ id: "A", label: "Asem Tenan!" },
+{ id: "B", label: "B" },
+{ id: "C", label: "C" },
+{ id: "D", label: "D" },
+{ id: "E", label: "E" },
+{ id: "F", label: "F" },
+{ id: "G", label: "G" }];
+
+
+var arcs = [
+{ source: "A", target: "B", label: "A to B", class: "animation animation-slow density-low weight-high" },
+{ source: "A", target: "F", label: "A to F", class: "inactive" },
+{ source: "B", target: "F", label: "B to F", class: "inactive" },
+{ source: "C", target: "F", label: "C to F", class: "animation animation-fast density-low" },
+{ source: "C", target: "B", label: "C to B", class: "animation animation-fast density-medium weight-medium" },
+{ source: "B", target: "C", label: "B to C", class: "animation animation-medium density-high weight-medium" },
+{ source: "A", target: "D", label: "A to D", class: "animation animation-slow density-high weight-high" },
+{ source: "E", target: "D", label: "E to D", class: "inactive" },
+{ source: "A", target: "E", label: "A to E", class: "inavtive" },
+{ source: "D", target: "F", label: "D to F", class: "animation animation-fast density-high weight-low" },
+{ source: "F", target: "G", label: "F to G", class: "animation animation-medium density-high" }];
+
+
+var countNode = 0;
+nodes.forEach(function (val, key) {
+  countNode++;
+  val.svgId = 'node' + countNode;
+  g.setNode(val.id, {
+    id: val.svgId,
+    label: nodeTemplate(val),
+    labelType: "html" });
+
+});
+
+var countArc = 0;
+arcs.forEach(function (val, key) {
+  countArc++;
+  val.svgId = 'arc' + countArc;
+  g.setEdge(val.source, val.target, {
+    arrowhead: "hollowPoint",
+    arrowheadClass: 'arrowhead',
+    label: arcTemplate(val),
+    labelType: 'html',
+    lineInterpolate: 'basis',
+    class: val.class,
+    id: val.svgId,
+    labelId: val.svgId + '-label' });
+
+});
+
+// Create the renderer
+var render = new dagreD3.render();
+
+// Add our custom arrow (a hollow-point)
+render.arrows().hollowPoint = function normal(parent, id, edge, type) {
+  var marker = parent.append("marker").
+  attr("id", id).
+  attr("viewBox", "0 0 10 10").
+  attr("refX", 9).
+  attr("refY", 5).
+  attr("markerUnits", "userSpaceOnUse").
+  attr("markerWidth", 10).
+  attr("markerHeight", 8).
+  attr("orient", "auto");
+
+  var path = marker.append("path").
+  attr("d", "M 0 0 L 10 5 L 0 10 z").
+  style("stroke-width", 1).
+  style("stroke-dasharray", "1,0").
+  style("fill", "#fff").
+  style("stroke", "#333");
+  dagreD3.util.applyStyle(path, edge[type + "Style"]);
+};
+
+// Set up an SVG group so that we can translate the final graph.
+var svg = d3.select("svg"),
+inner = svg.append("g");
+
+// Run the renderer. This is what draws the final graph.
+render(inner, g);
+
+// Center the graph
+var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+inner.attr("transform", "translate(" + xCenterOffset + ", 20)");
+svg.attr("height", g.graph().height + 40);
+
+window.setTimeout(function (v, k) {
+  arcs.forEach(function (val, key) {
+    console.log(val);
+    val.label = "Label - " + val.label;
+
+    val.svgPath = d3.select('#' + val.svgId);
+    val.svgLabel = d3.select('#' + val.svgId + '-label');
+
+    new ArcComponent({ data: val }).$mount('#' + val.svgId + '-label div');
+
+    // var obj = new Vue({
+    //   el: '#'+val.svgId+'-label div',
+    //   data: val,
+    //   template: '#arc-template-detail',
+    //   methods: {
+    //     showDetail: function(){
+    //       alert('Arc ('+this.source+'-'+this.target+') detail')
+    //     }
+    //   }
+    // })
+  });
+
+  d3.select('body').
+  transition().
+  duration(1000).
+  style('background', '#ff5722');
+}, 3000);
+
+
+// BURsT AND EXPLODE EFFECT
+var width = $('svg#svg').width();console.log(width);
+var height = $('svg#svg').height();console.log(height);
+var outputTranslate = d3.transform(d3.select('#svg-container svg > g').attr("transform"));
+var outputTranslateX = outputTranslate.translate[0];console.log(outputTranslateX);
+var outputTranslateY = outputTranslate.translate[1];console.log(outputTranslateY);
+
+var burst = new mojs.Burst({
+  parent: "#svg-container",
+  x: 100,
+  y: 100,
+  radius: { 0: 100 },
+  count: 7,
+  angle: { 0: 180 },
+  opacity: { 1: 0 },
+  children: {
+    fill: { 'red': 'black' },
+    duration: 1000 } });
+
+
+
+function showMo() {
+  burst.replay();
+}
+
+// TOKEN D#js
+var tknA = d3.select('svg').append('g').
+attr('transform', 'translate(100,100)');
+var tokenA = tknA.append('circle').
+attr('transform', 'translate(0,0)').
+attr('cx', 0).
+attr('cy', 0).
+attr('r', 0);
+var tokenB = d3.select('svg').append('circle').
+attr('transform', 'translate(100,150)').
+attr('cx', 0).
+attr('cy', 0).
+attr('r', 0);
+
+function fadeOutD3() {
+  tokenA.transition().
+  duration(50).
+  attr("r", 5).
+  style("opacity", 0.5).
+  transition().
+  duration(500).
+  attr("r", 30).
+  style("opacity", 0).
+  transition().
+  duration(10).
+  attr("r", 0);
+
+
+  tokenB.transition().
+  duration(50).
+  attr("r", 10).
+  style("opacity", 1).
+  transition().
+  duration(500).
+  attr("r", 0).
+  style("opacity", 0);
+
+}
+//# sourceURL=pen.js
+    </script>
+
+  
+
+</body>
+
+</html>
+ 
