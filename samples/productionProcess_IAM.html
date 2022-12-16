@@ -222,16 +222,19 @@
     <textarea id="mySavedModel" style="display: none">
 { "class": "GraphLinksModel",
   "nodeDataArray": [
-{"key":1, "pos":"-170 -48", "icon":"singleuser", "color":"blue", "text":"Single\nUser", "description":"User can be Admin, developer based on the role", "caption":"Offshore oil well", "imgsrc":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Oil_platform_P-51_%28Brazil%29.jpg/512px-Oil_platform_P-51_%28Brazil%29.jpg"},
-{"key":2, "pos":"190 -50", "icon":"Roles", "color":"blue", "text":"Role", "description":"Based on roles the resources will be accessible", "imgsrc":"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/BarnettShaleDrilling-9323.jpg/256px-BarnettShaleDrilling-9323.jpg"},
+{"key":1, "pos":"-170 -50", "icon":"singleuser", "color":"blue", "text":"Single\nUser", "description":"Based on type of work(administrator, devops, Security) user can have access to limited number of AWS resources, its maintained using Policies", "caption":"Offshore oil well", "imgsrc":"images/user.png"},
+{"key":2, "pos":"-170 -160", "icon":"Roles", "color":"blue", "text":"Role", "description":"Role is similar to a user, while communicating App to App services we can assign Policies to access resources", "imgsrc":"images/roles.png"},
 
-{"key":3, "pos":"-70 110", "icon":"Multiuser", "color":"blue", "text":"User Group", "description":"User group will have list of users which have similar kind of access.", "caption":"Natural gas plant", "imgsrc":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Solohiv_natural_gas_plant_-_fragment.jpg/256px-Solohiv_natural_gas_plant_-_fragment.jpg"},
-{"key":4, "pos":"40 -50", "icon":"checklist", "color":"red", "text":"Policy", "description":"Policies are the permissions given to specific resources", "caption":"Gas Plant", "imgsrc":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Gasblok.jpg/256px-Gasblok.jpg"},
-{"key":5, "pos":"300 -50", "icon":"resources", "color":"red", "text":"Cloud Resources", "description":"All the cloud services can be considered as Cloud Resources", "imgsrc":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Gasblok.jpg/256px-Gasblok.jpg"}
+{"key":3, "pos":"-70 110", "icon":"Multiuser", "color":"blue", "text":"User Group", "description":"User group will have list of users which have similar kind of access to set of resources", "caption":"Natural gas plant", "imgsrc":"images/usergroup.png"},
+{"key":6, "pos":"40 -160", "icon":"checklist", "color":"blue", "text":"Policy", "description":"Policies are set of rules which are applies while accessing the resources by users or groups or applications", "caption":"Gas Plant", "imgsrc":"images/policy.png"},
+{"key":4, "pos":"40 -50", "icon":"checklist", "color":"blue", "text":"Policy", "description":"Policies are set of rules which are applies while accessing the resources by users or groups or applications", "caption":"Gas Plant", "imgsrc":"images/policy.png"},
+{"key":5, "pos":"300 -50", "icon":"resources", "color":"blue", "text":"Cloud Resources", "description":"Resources are nothing but set of cloud services which can be consumed", "imgsrc":"images/cloud_services.png"}
 
  ],
   "linkDataArray": [
-{"from":1, "to":4, "points":[-150,-41, 20,-41.33333333333333]},
+{"from":1, "to":5, "points":[-150,-41, 20,-41.33333333333333]},
+{"from":2, "to":6, "points":[-150,-150,0,-150]},
+{"from":6, "to":5, "points":[70,-150,300,-150,300,-90]},
 {"from":2, "to":3, "points":[-170,0,-170,103,-140,103,-120,103,-120,103,-100,103,-90,103]},
 {"from":3, "to":4, "points":[-50,98.66666666666667,-40,98.66666666666667,-15,98.66666666666667,-15,-35.666666666666667,-250,-35.666666666666667,20,-35.666666666666667]},
 {"from":4, "to":5, "points":[20,-41,280,-41]}
